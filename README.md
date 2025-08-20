@@ -51,7 +51,7 @@ Make sure you have the following software installed on your machine:
 4.  **Set up your environment variables:**
     *   First, copy the example environment file to create your local version:
         ```bash
-        cp .env.example .env.local
+        cp env.example .env.local
         ```
     *   Next, log in to the [Supabase Dashboard](https://supabase.com/).
     *   Navigate to the **`FrontEnd-Dev`** project (this is our shared development database).
