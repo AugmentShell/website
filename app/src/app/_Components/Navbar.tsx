@@ -1,9 +1,9 @@
 export const Navbar = () => {
-  return <nav className=" h-16 w-full card flex px-24 justify-between">
+  return <nav className=" h-16 w-full card flex px-6 lg:px-24 justify-between">
 
     {/* Logo container */}
 
-    <div className="basis-5/16">
+    <div className="basis-12/12 md:basis-5/12 lg:basis-4/12">
         <img src={"/logo-clear-background.svg"}
         alt="Augment Shell"
         className="h-full w-auto"/>
@@ -11,9 +11,9 @@ export const Navbar = () => {
 
     {/* Nav Buttons container */}
 
-    <div className="basis-7/16">
+    <div className="hidden md:flex md:basis-5/12">
 
-        <ul className=" flex h-full justify-between items-center body-1 underline">
+        <ul className="flex h-full w-full items-center nav-text justify-between underline">
             <li><a>preview</a></li>
             <li><a>features</a></li>
             <li><a>faq</a></li>

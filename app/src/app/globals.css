@@ -30,15 +30,19 @@
 
   /* === Body text === */
   .body-1 {
-    @apply text-4xl font-normal; /* 32px */
+    @apply text-base md:text-4xl font-normal; /* 32px */
   }
 
   .body-2 {
-    @apply text-2xl font-normal; /* 24px */
+    @apply text-xs md:text-2xl font-normal; /* 24px */
   }
 
   .body-3 {
-    @apply text-xl font-normal; /* 20px */
+    @apply text-base md:text-xl font-normal; /* 20px */
+  }
+
+  .nav-text {
+    @apply text-xs md:text-2xl xl:text-4xl font-normal; /* 24px */
   }
 }
 
@@ -50,3 +54,16 @@
     @apply bg-[url('/card-Gradient-Light.svg')] bg-no-repeat bg-center
   }
 }
+
+@keyframes caret-blink { 50% { opacity: 0; } }
+.caret-blink { animation: caret-blink 1s steps(1, end) infinite; }
+
+.caret-fixed {
+  display: inline-block;
+  width: 1ch;          /* keeps space so toggling visibility doesn't reflow text */
+  line-height: 1;
+}
+
+/* Hide scrollbars cross-browser */
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
