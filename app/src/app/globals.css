@@ -16,6 +16,30 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-header;
   }
+  h1 {
+    @apply text-6xl font-normal; /* 64px */
+  }
+
+  h2 {
+    @apply text-5xl font-normal; /* 48px */
+  }
+
+  h3 {
+    @apply text-2xl font-normal; /* 24px */
+  }
+
+  /* === Body text === */
+  .body-1 {
+    @apply text-4xl font-normal; /* 32px */
+  }
+
+  .body-2 {
+    @apply text-2xl font-normal; /* 24px */
+  }
+
+  .body-3 {
+    @apply text-xl font-normal; /* 20px */
+  }
 }
 
 @layer components {
