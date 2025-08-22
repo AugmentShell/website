@@ -9,12 +9,14 @@ function cn(...classes: Array<string | undefined | false | null>) {
 
 const buttonVariants = cva(
   [
-    "inline-flex items-center justify-center select-none font-medium",
-    "px-6 py-3 rounded-2xl",
+    // content-sized button
+    "inline-flex w-fit items-center justify-center select-none",
+    // look & feel
+    "rounded-2xl px-4 py-4 font-medium",
     "shadow-sm hover:shadow-md",
     "transition-[background,box-shadow,transform] duration-150",
     "active:translate-y-px active:shadow-sm",
-    "focus:outline-none"
+    "focus:outline-none", // no ring
   ].join(" "),
   {
     variants: {
@@ -22,18 +24,20 @@ const buttonVariants = cva(
         default: [
           "bg-[var(--color-button)]",
           "text-[var(--color-foreground)]",
-          "hover:bg-[var(--color-button-hover)]"
+          "hover:bg-[var(--color-button-hover)]",
         ].join(" "),
         warning: [
           "bg-[var(--color-error)]",
           "text-red-200",
-          "hover:bg-[var(--color-error-hover)]"
+          "hover:bg-[var(--color-error-hover)]",
         ].join(" "),
       },
+      // size controls ONLY typography; no fixed heights
       size: {
-        sm: "h-9 px-4 text-sm",
-        md: "h-11 px-6",
-        lg: "h-12 px-8 text-lg",
+        xs: "text-xs",
+        sm: "text-sm",
+        md: "text-base",
+        lg: "text-lg",
       },
     },
     defaultVariants: { variant: "default", size: "md" },
