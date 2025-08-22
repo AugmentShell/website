@@ -17,7 +17,7 @@
     @apply font-header;
   }
   h1 {
-    @apply text-6xl font-normal; /* 64px */
+    @apply text-3xl md:text-6xl font-normal; /* sm:30px md:60px */
   }
 
   h2 {
@@ -34,7 +34,7 @@
   }
 
   .body-2 {
-    @apply text-xs md:text-2xl font-normal; /* 24px */
+    @apply text-base md:text-2xl font-normal; /* 24px */
   }
 
   .body-3 {

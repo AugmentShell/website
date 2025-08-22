@@ -2,7 +2,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
 type Line = { text: string; color?: string };
-
 type Phase = "typing" | "awaitErase" | "erasing" | "done";
 
 interface TerminalTyperProps {
@@ -14,15 +13,14 @@ interface TerminalTyperProps {
   cursorDelay?: number;                // ms to delay showing the cursor during pauses (default 500)
   onEraseComplete?: (done: boolean) => void;
   setEraseDone?: (done: boolean) => void;
-  className?: string;
+  className?: string;                  // extra classes for outer wrapper
 }
 
 /**
- * TerminalTyper (TypeScript)
- * - Requires `linesToType` as array of { text, color? }.
- * - Types each line with a pause; waits for `eraseTrigger`; then erases continuously in reverse.
- * - Cursor is green, delayed-blink during pauses, hidden while typing/deleting, and remains on the same line.
- * - Auto-scroll only while typing; non-interactive output; 90% width, full height, hidden scrollbar.
+ * TerminalTyper (TypeScript, overflow-safe)
+ * - Natural wrapping (no horizontal scroll), vertical overflow with hidden scrollbar.
+ * - Auto-scroll only while typing (not during erase).
+ * - Cursor delayed on pauses; hidden during typing/deleting; stays on same line.
  */
 const TerminalTyper: React.FC<TerminalTyperProps> = ({
   linesToType,
@@ -41,13 +39,13 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   const [lineIndex, setLineIndex] = useState<number>(0);
   const [charIndex, setCharIndex] = useState<number>(0);
   const [currentLine, setCurrentLine] = useState<string>("");
-  const [typedLines, setTypedLines] = useState<Line[]>([]); // committed lines
+  const [typedLines, setTypedLines] = useState<Line[]>([]);
 
   // erasing state
   const [eraseLineIndex, setEraseLineIndex] = useState<number>(-1);
   const [eraseCharIndex, setEraseCharIndex] = useState<number>(0);
 
-  // cursor (always mounted; opacity toggled to avoid layout shift)
+  // cursor (opacity toggled to avoid layout shift)
   const [showCursor, setShowCursor] = useState<boolean>(false);
 
   // containers/refs
@@ -56,22 +54,22 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   const cursorTimerRef = useRef<number | null>(null);
   const eraseDoneFiredRef = useRef<boolean>(false);
 
-  const cursorDelayMs = cursorDelay ?? 500; // delay before showing cursor on pauses
+  const cursorDelayMs = cursorDelay ?? 500;
 
   const hasLines = linesToType.length > 0;
   const activeObj: Line =
     hasLines && lineIndex < linesToType.length ? linesToType[lineIndex] : { text: "" };
   const activeText = activeObj.text ?? "";
 
-  // Prevent interaction (no selection / pointer changes)
-  const nonInteractive = "select-none pointer-events-none [cursor:default]";
+  // Non-interactive (no selection / no pointer change)
+  const nonInteractive = "select-none [cursor:default]";
 
-  // Ensure parent eraseTrigger is false when this terminal mounts (so each fresh render starts clean)
+  // Ensure parent eraseTrigger is false on mount (fresh start each render)
   useEffect(() => {
     if (setEraseTrigger) setEraseTrigger(false);
   }, [setEraseTrigger]);
 
-  // Helpers for cursor visibility with delay
+  // Cursor control with delayed arm
   const clearCursorTimer = () => {
     if (cursorTimerRef.current) {
       window.clearTimeout(cursorTimerRef.current);
@@ -91,7 +89,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     return () => clearCursorTimer();
   }, []);
 
-  // Track if user is at bottom (within 2px)
+  // Track if user is at bottom (<= 2px tolerance)
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
@@ -166,7 +164,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     setPhase("erasing");
     setEraseLineIndex(typedLines.length - 1);
     setEraseCharIndex((typedLines[typedLines.length - 1]?.text ?? "").length);
-    disarmCursor(); // erasing is continuous → keep cursor hidden
+    disarmCursor(); // continuous erase → keep cursor hidden
   }, [phase, eraseTrigger, typedLines]);
 
   // ---------- ERASING (reverse, NO pause between lines) ----------
@@ -227,21 +225,29 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`w-[90%] h-full max-w-none min-w-0 overflow-y-auto no-scrollbar
-                  text-left font-mono text-sm leading-normal
-                  ${nonInteractive} ${className}`}
+      className={[
+        // overflow-safe container: works inside flex parents
+        "min-h-0 h-full w-[90%] max-w-none min-w-0",
+        // vertical scroll only; hide scrollbar (global helper)
+        "overflow-y-auto no-scrollbar overscroll-contain",
+        // text flow + look
+        "text-left font-mono",
+        // prevent selection/pointer changes
+        nonInteractive,
+        className,
+      ].join(" ")}
       style={{ height: "100%" }}
     >
       {/* committed history */}
       {typedLines.map((ln, i) => (
         <div
           key={i}
-          className="block w-full min-w-0 whitespace-normal break-normal [hyphens:none]"
+          className="block w-full min-w-0 whitespace-normal break-normal [hyphens:none] pointer-events-none"
           style={ln.color ? { color: ln.color } : undefined}
         >
           <span className="inline">{ln.text}</span>
 
-          {/* Keep cursor ON SAME LINE when awaiting erase OR erasing the last line */}
+          {/* Cursor stays on SAME line during awaitErase or while erasing that line */}
           {((phase === "erasing" && i === eraseLineIndex) ||
             (phase === "awaitErase" && i === typedLines.length - 1)) && (
             <span

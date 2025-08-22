@@ -29,7 +29,9 @@ export default function RootLayout({
       <body
         className={`${fjallaOne.variable} ${cantarell.variable} antialiased`}
       >
-        {children}
+        <main className="flex flex-col items-center gap-10">
+          {children}
+        </main>
       </body>
     </html>
   );
