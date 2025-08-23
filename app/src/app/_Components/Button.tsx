@@ -7,7 +7,7 @@ function cn(...classes: Array<string | undefined | false | null>) {
 }
 
 type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "default" | "warning";
+  variant?: "default" | "warning" | "link";
   size?: "xs" | "sm" | "md" | "lg";
 };
 
@@ -19,23 +19,25 @@ export function Button({
 }: ButtonProps) {
   // Base shared styles
   const base =
-    "inline-flex w-fit items-center justify-center select-none " +
-    "rounded-2xl font-medium shadow-sm hover:shadow-md " +
-    "transition-[background,box-shadow,transform] duration-150 " +
-    "active:translate-y-px active:shadow-sm focus:outline-none";
+    "inline-flex w-fit items-center justify-center select-none font-medium " +
+    "transition-[background,box-shadow,transform,color,text-decoration] duration-150 " +
+    "focus:outline-none";
 
   // Variant styles
   const variantClasses =
     variant === "warning"
-      ? "bg-[var(--color-error)] text-red-200 hover:bg-[var(--color-error-hover)]"
-      : "bg-[var(--color-button)] text-[var(--color-foreground)] hover:bg-[var(--color-button-hover)]";
+      ? "rounded-2xl shadow-sm hover:shadow-md bg-[var(--color-error)] text-red-200 hover:bg-[var(--color-error-hover)] active:translate-y-px active:shadow-sm"
+      : variant === "link"
+      ? "text-[var(--color-button-hover)] underline-offset-4 underline hover:text-[var(--color-button)]"
+      : // default (green card)
+        "rounded-2xl shadow-sm hover:shadow-md bg-[var(--color-button)] text-[var(--color-foreground)] hover:bg-[var(--color-button-hover)] active:translate-y-px active:shadow-sm";
 
   // Size styles (padding + text size)
   const sizeClasses = {
-    xs: "px-2 py-1 text-xs",
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2 text-base",
-    lg: "px-6 py-3 text-lg",
+    xs: variant === "link" ? "text-xs px-0 py-0" : "px-2 py-1 text-xs",
+    sm: variant === "link" ? "text-sm px-0 py-0" : "px-3 py-1.5 text-sm",
+    md: variant === "link" ? "text-base px-0 py-0" : "px-4 py-2 text-base",
+    lg: variant === "link" ? "text-lg px-0 py-0" : "px-6 py-3 text-lg",
   }[size];
 
   return (

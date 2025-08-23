@@ -19,14 +19,16 @@ export default function TerminalWindow() {
 
       <div className="body-2 h-full" >
         {!done && <TerminalTyper
-          typingSpeed={5}
+          typingSpeed={2}
+          eraseSpeed={1}
           linePause={50}
           eraseTrigger={erase}   // ⬅️ Flip to true to start erasing
           setEraseDone={setDone}
           linesToType={errorLines}
         />}
         {done && <TerminalTyper
-          typingSpeed={5}
+          typingSpeed={2}
+          eraseSpeed={15}
           linePause={50}
           eraseTrigger={erase}   // ⬅️ Flip to true to start erasing
           setEraseDone={setDone}

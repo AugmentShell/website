@@ -17,7 +17,7 @@
     @apply font-header;
   }
   h1 {
-    @apply text-3xl md:text-6xl font-normal; /* sm:30px md:60px */
+    @apply text-3xl md:text-6xl font-normal leading-10 md:leading-20; /* sm:30px md:60px */
   }
 
   h2 {
