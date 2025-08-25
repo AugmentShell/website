@@ -7,7 +7,7 @@ type Phase = "typing" | "awaitErase" | "erasing" | "done";
 interface TerminalTyperProps {
   linesToType: Line[];
   typingSpeed: number;                 // ms per character (typing)
-  eraseSpeed: number;                  // ms per character (erasing) ⬅️ NEW
+  eraseSpeed: number;                  // ms per character (erasing)
   linePause: number;                   // ms pause between lines while typing
   eraseTrigger: boolean;               // when true AFTER typing finishes, start erasing
   setEraseTrigger?: (b: boolean) => void; // optional: reset to false on mount
@@ -20,7 +20,7 @@ interface TerminalTyperProps {
 const TerminalTyper: React.FC<TerminalTyperProps> = ({
   linesToType,
   typingSpeed,
-  eraseSpeed,            // ⬅️ NEW
+  eraseSpeed,
   linePause,
   eraseTrigger,
   setEraseTrigger,
@@ -57,15 +57,15 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     hasLines && lineIndex < linesToType.length ? linesToType[lineIndex] : { text: "" };
   const activeText = activeObj.text ?? "";
 
-  // Non-interactive (no selection / no pointer change)
+  // Non-interactive (no selection / no pointer change) — but allow scroll
   const nonInteractive = "select-none [cursor:default]";
 
-  // Reset eraseTrigger on mount
+  // Reset eraseTrigger on mount so each new instance starts clean
   useEffect(() => {
     if (setEraseTrigger) setEraseTrigger(false);
   }, [setEraseTrigger]);
 
-  // Cursor helpers
+  // Cursor helpers (delayed show during pauses)
   const clearCursorTimer = () => {
     if (cursorTimerRef.current) {
       window.clearTimeout(cursorTimerRef.current);
@@ -83,22 +83,20 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
 
   useEffect(() => () => clearCursorTimer(), []);
 
-  // Track if user is pinned to bottom
+  // Track if user is pinned to bottom (<= 2px tolerance)
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-
     const onScroll = () => {
       const delta = el.scrollHeight - el.scrollTop - el.clientHeight;
       userPinnedBottomRef.current = delta <= 2;
     };
-
     onScroll();
     el.addEventListener("scroll", onScroll, { passive: true });
     return () => el.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Auto-scroll while typing
+  // Auto-scroll ONLY while typing (and only if already pinned)
   useEffect(() => {
     if (phase !== "typing") return;
     const el = containerRef.current;
@@ -111,6 +109,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     if (phase !== "typing" || !hasLines) return;
     if (lineIndex >= linesToType.length) return;
 
+    // actively typing → hide cursor
     disarmCursor();
 
     if (charIndex < activeText.length) {
@@ -121,7 +120,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
       return () => window.clearTimeout(t);
     }
 
-    // finished this line
+    // finished this line → pause (cursor ON after delay), commit, then next or await erase
     armCursorAfterDelay();
     const isLast = lineIndex === linesToType.length - 1;
     const t = window.setTimeout(() => {
@@ -131,10 +130,10 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
 
       if (!isLast) {
         setLineIndex((i) => i + 1);
-        disarmCursor();
+        disarmCursor(); // resume typing → hide cursor again
       } else {
         setPhase("awaitErase");
-        armCursorAfterDelay();
+        armCursorAfterDelay(); // waiting state → cursor after delay
       }
     }, linePause);
 
@@ -199,7 +198,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
           return out;
         });
       }
-    }, eraseSpeed); // ⬅️ NEW: eraseSpeed instead of typingSpeed
+    }, eraseSpeed);
 
     return () => window.clearTimeout(t);
   }, [
@@ -235,7 +234,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
           {((phase === "erasing" && i === eraseLineIndex) ||
             (phase === "awaitErase" && i === typedLines.length - 1)) && (
             <span
-              className={`caret-fixed text-[#A7C957] [font-size:inherit] [line-height:inherit] align-baseline ${
+              className={`caret-fixed [font-size:inherit] [line-height:inherit] align-baseline ${
                 showCursor ? "caret-blink opacity-100" : "opacity-0"
               }`}
             >
@@ -253,7 +252,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
         >
           <span className="inline">{currentLine}</span>
           <span
-            className={`caret-fixed text-[#A7C957] [font-size:inherit] [line-height:inherit] align-baseline ${
+            className={`caret-fixed [font-size:inherit] [line-height:inherit] align-baseline ${
               showCursor ? "caret-blink opacity-100" : "opacity-0"
             }`}
           >

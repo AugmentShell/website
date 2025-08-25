@@ -16,31 +16,31 @@ export default function Home() {
           transparent, and approved plans.</p>
       </Card>
       <Button><h2>Join for Updates</h2></Button>
-      <div className="flex flex-col w-[90%] md:w-[80%] px-4 gap-4">
-        <h1>A Smarter, Safer Way to Operate.</h1>
-        <Card className="flex w-full gap-x-4">
+      <div className="flex flex-col w-[90%] md:w-[80%] gap-4">
+        <h1 className="mx-8">A Smarter, Safer Way to Operate.</h1>
+        <Card className="flex w-full gap-x-2">
           <InfoStack>
             <h2>The DevOps Perception Layer</h2>
-            <p className="body-3">Deeply understands your operational environment. 
+            <p className="body-3 w-[95%]">Deeply understands your operational environment. 
               It sees your Docker containers, Kubernetes pods, and systemd services 
               to generate hyper-relevant plans.</p>
           </InfoStack>
           <InfoStack>
             <h2>Safety-First Planning Layer</h2>
-            <p className="body-3">Our core philosophy. Every action is first presented 
+            <p className="body-3 w-[95%]">Our core philosophy. Every action is first presented 
               as a clear, human-readable plan. You see the exact commands before they 
               run. You are always in command.</p>
           </InfoStack>
           <InfoStack>
             <h2>The Open Execution Layer</h2>
-            <p className="body-3">We are Switzerland. Bring your own AI model; 
+            <p className="body-3 w-[95%]">We are Switzerland. Bring your own AI model; 
               OpenAI, Claude, Llama 3, or plug directly into your enterprise's 
               secure cloud instance. No vendor lock-in.</p>
           </InfoStack>
         </Card>
       </div>
       <div className="flex flex-col gap-4 w-[90%] md:w-[80%]">
-        <h1>Frequently Asked Questions</h1>
+        <h1 className="mx-8">Frequently Asked Questions</h1>
         <div className="flex flex-col gap-12">
           <Card className="w-5/12"><h2>How do we get started?</h2></Card>
           <Card className="w-5/12"><h2>Can we really trust AI agents to accomplish tasks?</h2></Card>
