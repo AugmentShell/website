@@ -27,8 +27,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${fjallaOne.variable} ${cantarell.variable} antialiased
-        bg-[url(/background-body.svg)] bg-no-repeat bg-cover bg-center`}
+        className={`${fjallaOne.variable} ${cantarell.variable} antialiased w-full
+        bg-[url(/Background_sm_640.svg)] 
+        md:bg-[url(/Background_md_768.svg)] 
+        lg:bg-[url(/Background_lg_1024.svg)] 
+        bg-no-repeat bg-cover bg-center`}
       >
         <main className="flex flex-col items-center gap-10">
           {children}

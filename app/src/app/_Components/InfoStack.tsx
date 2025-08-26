@@ -2,8 +2,10 @@
 
 import * as React from "react";
 
-type InfoStackProps = React.PropsWithChildren;
+type InfoStackProps = React.PropsWithChildren<{
+  className?: string;
+}>;
 
-export const InfoStack = ({ children }: InfoStackProps) => {
-  return <div className="flex flex-col">{children}</div>;
+export const InfoStack = ({ children, className }: InfoStackProps) => {
+  return <div className={`flex flex-col ${className ?? ""}`}>{children}</div>;
 };

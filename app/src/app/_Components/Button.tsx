@@ -20,19 +20,36 @@ export function Button({
   // Base shared styles
   const base =
     "inline-flex w-fit items-center justify-center select-none font-medium " +
-    "transition-[background,box-shadow,transform,color,text-decoration] duration-150 " +
-    "focus:outline-none";
+    "transition-colors transition-transform duration-150 " +
+    "focus:outline-none rounded-2xl";
 
   // Variant styles
   const variantClasses =
     variant === "warning"
-      ? "rounded-2xl shadow-sm hover:shadow-md bg-[var(--color-error)] text-red-200 hover:bg-[var(--color-error-hover)] active:translate-y-px active:shadow-sm"
+      ? [
+          // Normal
+          "bg-[var(--color-error)] text-red-200",
+          // Hover invert
+          "hover:bg-red-200 hover:text-[var(--color-error)]",
+          // Press feedback
+          "active:translate-y-px shadow-sm hover:shadow-md",
+        ].join(" ")
       : variant === "link"
-      ? "text-[var(--color-button-hover)] underline-offset-4 underline hover:text-[var(--color-button)]"
-      : // default (green card)
-        "rounded-2xl shadow-sm hover:shadow-md bg-[var(--color-button)] text-[var(--color-foreground)] hover:bg-[var(--color-button-hover)] active:translate-y-px active:shadow-sm";
+      ? [
+          "text-[var(--color-text)] underline-offset-4 underline md:no-underline md:hover:underline",
+          // No padding/card background for link style
+          "bg-transparent rounded-none shadow-none",
+        ].join(" ")
+      : [
+          // Default green
+          "bg-[var(--color-button)] text-[var(--color-foreground)]",
+          // Hover invert
+          "hover:bg-[var(--color-text)] hover:text-[var(--color-button)]",
+          // Press feedback
+          "active:translate-y-px shadow-sm hover:shadow-md",
+        ].join(" ");
 
-  // Size styles (padding + text size)
+  // Size styles
   const sizeClasses = {
     xs: variant === "link" ? "text-xs px-0 py-0" : "px-2 py-1 text-xs",
     sm: variant === "link" ? "text-sm px-0 py-0" : "px-3 py-1.5 text-sm",

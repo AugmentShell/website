@@ -57,7 +57,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     hasLines && lineIndex < linesToType.length ? linesToType[lineIndex] : { text: "" };
   const activeText = activeObj.text ?? "";
 
-  // Non-interactive (no selection / no pointer change) — but allow scroll
+  // Non-interactive (no text selection or pointer changes), but allow scrolling
   const nonInteractive = "select-none [cursor:default]";
 
   // Reset eraseTrigger on mount so each new instance starts clean
@@ -215,9 +215,13 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     <div
       ref={containerRef}
       className={[
+        // overflow-safe container: works inside flex parents
         "min-h-0 h-full w-[90%] max-w-none min-w-0",
-        "overflow-y-auto no-scrollbar overscroll-contain",
+        // vertical scroll; hide scrollbar; **let browser chain scroll to page**
+        "overflow-y-auto no-scrollbar overscroll-auto",
+        // text flow + look
         "text-left font-mono",
+        // prevent selection/pointer changes but keep scroll working
         nonInteractive,
         className,
       ].join(" ")}

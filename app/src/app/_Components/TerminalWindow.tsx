@@ -13,9 +13,9 @@ export default function TerminalWindow() {
   const [done, setDone] = useState(false);
 
   return (
-    <div className='flex flex-col items-center'>
+    <div className='flex flex-col items-center w-full'>
   
-    <div className="h-[75vh] w-[80vw] bg-[#2a2b2a] border-8 border-black rounded">
+    <div className="h-[75vh] w-[80%] bg-[#2a2b2a] border-8 border-black rounded terminal">
 
       <div className="body-2 h-full" >
         {!done && <TerminalTyper
@@ -40,7 +40,7 @@ export default function TerminalWindow() {
       {/* on click logic is preventing the button from erasing the second terminal */}
       <Button
         variant={done ? 'default' : 'warning'}
-        className='mt-4'
+        className='mt-6'
           onClick={() => {if(!done){setErase(true)}}}
         >
           <h3>ACTIVATE AUGMENTSHELL</h3>
