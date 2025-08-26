@@ -1,6 +1,16 @@
+"use client"
 import { Button } from "./Button";
+import { useDialog } from "./DialogProvider";
+import { ContactForm } from "./DialogContent/ContactForm";
 
 export const Navbar = () => {
+
+  const {openDialog} = useDialog()
+
+  const openContactForm = () => {
+    openDialog(<ContactForm></ContactForm>)
+  }
+
   return <nav className=" h-16 w-full card flex px-6 xl:px-24 justify-between">
 
     {/* Logo container */}
@@ -19,7 +29,7 @@ export const Navbar = () => {
             <Button variant="link"><p className="body-1">preview</p></Button>
             <Button variant="link"><p className="body-1">features</p></Button>
             <Button variant="link"><p className="body-1">faq</p></Button>
-            <Button variant="link"><p className="body-1">join</p></Button>
+            <Button onClick={openContactForm} variant="link"><p className="body-1">join</p></Button>
         </ul>
 
     </div>

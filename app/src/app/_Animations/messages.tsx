@@ -1,3 +1,7 @@
+export const defaultMessage = [
+  { text: "Hello World!", color: "#ffffff"}
+]
+
 export const mixedErrors= [
   { text: ">> CRITICAL_ERROR: Pod 'web-api-7c5b6d...' in namespace 'prod-us-east-1' is experiencing a CrashLoopBackOff.", color: "#BC4749" },
   { text: ">> Analyzing system state...", color: "#ffffff" },

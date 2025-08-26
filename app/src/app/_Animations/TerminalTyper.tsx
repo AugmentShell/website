@@ -9,7 +9,7 @@ interface TerminalTyperProps {
   typingSpeed: number;                 // ms per character (typing)
   eraseSpeed: number;                  // ms per character (erasing)
   linePause: number;                   // ms pause between lines while typing
-  eraseTrigger: boolean;               // when true AFTER typing finishes, start erasing
+  eraseTrigger?: boolean;               // when true AFTER typing finishes, start erasing
   setEraseTrigger?: (b: boolean) => void; // optional: reset to false on mount
   cursorDelay?: number;                // ms to delay showing the cursor during pauses (default 500)
   onEraseComplete?: (done: boolean) => void;
@@ -216,7 +216,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
       ref={containerRef}
       className={[
         // overflow-safe container: works inside flex parents
-        "min-h-0 h-full w-[90%] max-w-none min-w-0",
+        "body-2 min-h-0 h-full w-[90%] max-w-none min-w-0",
         // vertical scroll; hide scrollbar; **let browser chain scroll to page**
         "overflow-y-auto no-scrollbar overscroll-auto",
         // text flow + look
