@@ -19,7 +19,7 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
       <div
         className={
           // defaults, followed by your overrides so they win
-          `h-[75vh] w-[80%] bg-[#2a2b2a] border-8 border-black rounded terminal ${className}`
+          `h-[75vh] w-[80%] bg-[#2a2b2a] border-8 border-[#1E242080] p-1 rounded terminal ${className}`
         }
       >
         <div className="body-2 h-full">

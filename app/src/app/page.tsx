@@ -74,7 +74,9 @@ export default function Home() {
       <Card className="flex flex-col items-center w-[85%] mt-5 md:mt-20">
         <h1 className="mb-4 text-center">Stop Fighting Fires. Start Commanding Them.</h1>
         <p className="body-1 mb-8 md:mb-16">Whether you’re starting up or it’s all going down. AugmentShell is here.</p>
-        <Button variant="link"><h2>Join For Updates</h2></Button>
+        <DialogTrigger content={<ContactForm/>}>
+          <Button variant="link"><h2>Join For Updates</h2></Button>
+        </DialogTrigger>
       </Card>
       <Card className="my-4 md:my-12">
         <img src={"/logo-clear-background.svg"}
