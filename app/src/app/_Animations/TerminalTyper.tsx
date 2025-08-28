@@ -1,30 +1,30 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Line = { text: string; color?: string };
 type Phase = "typing" | "awaitErase" | "erasing" | "done";
 
 interface TerminalTyperProps {
   linesToType: Line[];
-  typingSpeed: number;                 // ms per character (typing)
-  eraseSpeed: number;                  // ms per character (erasing)
-  linePause: number;                   // ms pause between lines while typing
+  typingSpeed?: number;                 // ms per character (typing)
+  eraseSpeed?: number;                  // ms per character (erasing)
+  linePause?: number;                   // ms pause between lines while typing
   eraseTrigger?: boolean;               // when true AFTER typing finishes, start erasing
   setEraseTrigger?: (b: boolean) => void; // optional: reset to false on mount
-  cursorDelay?: number;                // ms to delay showing the cursor during pauses (default 500)
+  cursorDelay?: number;                 // ms to delay showing the cursor during pauses (default 500)
   onEraseComplete?: (done: boolean) => void;
   setEraseDone?: (done: boolean) => void;
-  className?: string;                  // extra classes for outer wrapper
+  className?: string;                   // extra classes for outer wrapper
 }
 
 const TerminalTyper: React.FC<TerminalTyperProps> = ({
   linesToType,
-  typingSpeed,
-  eraseSpeed,
-  linePause,
+  typingSpeed = 20,
+  eraseSpeed = 15,
+  linePause = 800,
   eraseTrigger,
   setEraseTrigger,
-  cursorDelay,
+  cursorDelay = 500,
   onEraseComplete,
   setEraseDone,
   className = "",
@@ -50,11 +50,12 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   const cursorTimerRef = useRef<number | null>(null);
   const eraseDoneFiredRef = useRef<boolean>(false);
 
-  const cursorDelayMs = cursorDelay ?? 500;
-
   const hasLines = linesToType.length > 0;
-  const activeObj: Line =
-    hasLines && lineIndex < linesToType.length ? linesToType[lineIndex] : { text: "" };
+
+  const activeObj: Line = useMemo(
+    () => (hasLines && lineIndex < linesToType.length ? linesToType[lineIndex] : { text: "" }),
+    [hasLines, lineIndex, linesToType]
+  );
   const activeText = activeObj.text ?? "";
 
   // Non-interactive (no text selection or pointer changes), but allow scrolling
@@ -63,25 +64,28 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   // Reset eraseTrigger on mount so each new instance starts clean
   useEffect(() => {
     if (setEraseTrigger) setEraseTrigger(false);
-  }, [setEraseTrigger]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // once
 
   // Cursor helpers (delayed show during pauses)
-  const clearCursorTimer = () => {
+  const clearCursorTimer = useCallback(() => {
     if (cursorTimerRef.current) {
       window.clearTimeout(cursorTimerRef.current);
       cursorTimerRef.current = null;
     }
-  };
-  const armCursorAfterDelay = () => {
-    clearCursorTimer();
-    cursorTimerRef.current = window.setTimeout(() => setShowCursor(true), cursorDelayMs);
-  };
-  const disarmCursor = () => {
+  }, []);
+
+  const disarmCursor = useCallback(() => {
     clearCursorTimer();
     setShowCursor(false);
-  };
+  }, [clearCursorTimer]);
 
-  useEffect(() => () => clearCursorTimer(), []);
+  const armCursorAfterDelay = useCallback(() => {
+    clearCursorTimer();
+    cursorTimerRef.current = window.setTimeout(() => setShowCursor(true), cursorDelay);
+  }, [clearCursorTimer, cursorDelay]);
+
+  useEffect(() => () => clearCursorTimer(), [clearCursorTimer]);
 
   // Track if user is pinned to bottom (<= 2px tolerance)
   useEffect(() => {
@@ -148,6 +152,8 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     linePause,
     linesToType.length,
     activeObj.color,
+    armCursorAfterDelay,
+    disarmCursor,
   ]);
 
   // ---------- START ERASING ----------
@@ -157,7 +163,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     setEraseLineIndex(typedLines.length - 1);
     setEraseCharIndex((typedLines[typedLines.length - 1]?.text ?? "").length);
     disarmCursor();
-  }, [phase, eraseTrigger, typedLines]);
+  }, [phase, eraseTrigger, typedLines, disarmCursor]);
 
   // ---------- ERASING ----------
   useEffect(() => {
@@ -201,27 +207,15 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     }, eraseSpeed);
 
     return () => window.clearTimeout(t);
-  }, [
-    phase,
-    eraseLineIndex,
-    eraseCharIndex,
-    typedLines,
-    eraseSpeed,
-    onEraseComplete,
-    setEraseDone,
-  ]);
+  }, [phase, eraseLineIndex, eraseCharIndex, typedLines, eraseSpeed, onEraseComplete, setEraseDone, disarmCursor]);
 
   return (
     <div
       ref={containerRef}
       className={[
-        // overflow-safe container: works inside flex parents
         "body-2 min-h-0 h-full w-[90%] max-w-none min-w-0",
-        // vertical scroll; hide scrollbar; **let browser chain scroll to page**
         "overflow-y-auto no-scrollbar overscroll-auto",
-        // text flow + look
         "text-left font-mono",
-        // prevent selection/pointer changes but keep scroll working
         nonInteractive,
         className,
       ].join(" ")}

@@ -8,12 +8,9 @@ import { LongArrowRight } from "./_Components/Arrow"
 import { DialogTrigger } from "./_Components/NextjsEventHandlerCompliance/DialogTrigger";
 import DialogTerminal from "./_Components/DialogContent/DialogTerminal";
 import { ContactForm } from "./_Components/DialogContent/ContactForm";
+import Image from "next/image";
 
 export default function Home() {
-
-  const openTerminalDialog = () => {
-    console.log("hello world")
-  }
 
   return (
     <>
@@ -55,7 +52,7 @@ export default function Home() {
           <InfoStack className="flex flex-col justify-between gap-y-4">
             <h2 className="w-[90%]">The Open Execution Layer</h2>
             <p className="body-3 w-[95%]">We are Switzerland. Bring your own AI model; 
-              OpenAI, Claude, Llama 3, or plug directly into your enterprise's 
+              OpenAI, Claude, Llama 3, or plug directly into your enterprise&apos;s 
               secure cloud instance. No vendor lock-in.</p>
               <DialogTrigger content={<DialogTerminal/>}>
                 <Button className="rounded-3xl"><LongArrowRight/></Button>
@@ -79,9 +76,14 @@ export default function Home() {
         </DialogTrigger>
       </Card>
       <Card className="my-4 md:my-12">
-        <img src={"/logo-clear-background.svg"}
-          alt="Augment Shell"
-          className="h-auto w-[80vw]"/>
+          <Image
+            src="/logo-clear-background.svg"
+            alt="Augment Shell"
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="h-auto w-[80vw]"
+          />
       </Card>
     </>
   );

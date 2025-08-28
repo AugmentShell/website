@@ -2,6 +2,7 @@
 import { Button } from "./Button";
 import { useDialog } from "./DialogProvider";
 import { ContactForm } from "./DialogContent/ContactForm";
+import Image from "next/image";
 
 export const Navbar = () => {
 
@@ -16,9 +17,14 @@ export const Navbar = () => {
     {/* Logo container */}
 
     <div className="basis-12/12 flex justify-center lg:basis-5/12">
-        <img src={"/logo-clear-background.svg"}
-        alt="Augment Shell"
-        className="h-full w-auto"/>
+        <Image
+          src="/logo-clear-background.svg"
+          alt="Augment Shell"
+          width={0}
+          height={0}
+          sizes="100vw"
+          className="h-full w-auto"
+        />
     </div>
 
     {/* Nav Buttons container */}

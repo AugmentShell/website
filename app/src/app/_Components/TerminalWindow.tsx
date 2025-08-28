@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { mixedErrors, mixedSuccess, fullError, fullSuccess, warningMix } from "../_Animations/messages";
+import { mixedSuccess, warningMix } from "../_Animations/messages";
 import TerminalTyper from "../_Animations/TerminalTyper";
 import { Button } from "./Button";
 
