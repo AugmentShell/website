@@ -3,12 +3,12 @@ import { Card } from "./_Components/Card";
 import { InfoStack } from "./_Components/InfoStack";
 import { Navbar } from "./_Components/Navbar";
 import TerminalWindow from "./_Components/TerminalWindow";
-import { ChevronRight } from "lucide-react";
 import { LongArrowRight } from "./_Components/Arrow"
 import { DialogTrigger } from "./_Components/NextjsEventHandlerCompliance/DialogTrigger";
 import DialogTerminal from "./_Components/DialogContent/DialogTerminal";
 import { ContactForm } from "./_Components/DialogContent/ContactForm";
 import Image from "next/image";
+import { FAQ } from "./_Components/FAQ";
 
 export default function Home() {
 
@@ -60,14 +60,7 @@ export default function Home() {
           </InfoStack>
         </Card>
       </div>
-      <div className="flex flex-col gap-4 w-[90%] items-center md:items-start md:w-[85%] mt-5 md:mt-20 ">
-        <h1 className="md:mx-8">Frequently Asked Questions</h1>
-        <div className="flex flex-col gap-12 md:mx-8 ">
-          <Card className="flex justify-between items-center w-full lg:w-5/12"><h2 className="w-[80%]">How do we get started?</h2><ChevronRight/></Card>
-          <Card className="flex justify-between items-center w-full lg:w-5/12"><h2 className="w-[80%]">Can we really trust AI agents to accomplish tasks?</h2><ChevronRight/></Card>
-          <Card className="flex justify-between items-center w-full lg:w-5/12"><h2 className="w-[80%]">What platforms do you currently support?</h2><ChevronRight/></Card>
-        </div>
-      </div>
+      <FAQ/>
       <Card className="flex flex-col items-center w-[85%] mt-5 md:mt-20">
         <h1 className="mb-4 text-center">Stop Fighting Fires. Start Commanding Them.</h1>
         <p className="body-1 mb-8 md:mb-16">Whether you’re starting up or it’s all going down. AugmentShell is here.</p>
