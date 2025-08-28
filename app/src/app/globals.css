@@ -9,6 +9,10 @@
   --font-body: var(--font-cantarell);
 }
 
+html { 
+  scrollbar-gutter: stable;           /* or: stable both-edges */
+}
+
 @layer base {
   body {
     @apply bg-bg text-text font-body;
@@ -17,11 +21,11 @@
     @apply font-header;
   }
   h1 {
-    @apply text-6xl font-normal; /* 64px */
+    @apply text-xl sm:text-2xl md:text-6xl font-normal sm:leading-10 md:leading-20; /* sm:30px md:60px */
   }
 
   h2 {
-    @apply text-5xl font-normal; /* 48px */
+    @apply text-base sm:text-2xl md:text-5xl font-normal sm:leading-10 md:leading-15; /* 48px */
   }
 
   h3 {
@@ -44,6 +48,39 @@
   .nav-text {
     @apply text-xs md:text-2xl xl:text-4xl font-normal; /* 24px */
   }
+
+  input, textarea, select { color-scheme: dark; }
+
+  /* Chrome/Safari (WebKit) */
+  input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    /* text color */
+    -webkit-text-fill-color: var(--color-text) !important;
+    caret-color: var(--color-text);
+
+    /* override the yellow/gray bg with your theme bg */
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-bg) inset;
+            box-shadow: 0 0 0px 1000px var(--color-bg) inset;
+
+    /* optional: avoid flash on focus */
+    transition: background-color 9999s ease-out, color 9999s ease-out;
+  }
+
+  /* Firefox */
+  input:-moz-autofill,
+  textarea:-moz-autofill,
+  select:-moz-autofill {
+    box-shadow: 0 0 0px 1000px var(--color-bg) inset;
+    -moz-text-fill-color: var(--color-text);
+    caret-color: var(--color-text);
+  }
+
+  /* Keep typography consistent for autofilled first line */
+  input:-webkit-autofill::first-line,
+  textarea:-webkit-autofill::first-line {
+    font-family: var(--font-cantarell);
+  }
 }
 
 @layer components {
@@ -51,7 +88,10 @@
     @apply bg-button
   }
   .card {
-    @apply bg-[url('/card-Gradient-Light.svg')] bg-no-repeat bg-center
+  @apply bg-[url('/GRADIENT_CARD_489x80.svg')] bg-no-repeat bg-center bg-cover;
+  }
+  .terminal {
+    @apply bg-[url('/GRADIENT_TERMINAL_1121x583.svg')] bg-no-repeat bg-center bg-cover;
   }
 }
 
