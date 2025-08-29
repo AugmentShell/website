@@ -30,7 +30,6 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   className = "",
 }) => {
   // ---------- NEW: "sourceLines" is what we are currently typing toward ----------
-  // We copy props into state so we control when they take effect (after erase).
   const [sourceLines, setSourceLines] = useState<Line[]>(() => linesToType);
   const [queuedLines, setQueuedLines] = useState<Line[] | null>(null);
 
@@ -56,6 +55,12 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   const cursorTimerRef = useRef<number | null>(null);
   const eraseDoneFiredRef = useRef<boolean>(false);
   const hasMountedRef = useRef<boolean>(false);
+
+  // NEW: guard for external trigger rising-edge
+  const prevEraseTriggerRef = useRef<boolean | undefined>(eraseTrigger);
+
+  // NEW: idempotency for erasing timeouts
+  const erasingRunRef = useRef(0);
 
   const hasLines = sourceLines.length > 0;
 
@@ -121,11 +126,8 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
 
   // ---------- Helper: force-enter erasing (commit currentLine first if needed) ----------
   const forceStartErasing = useCallback(() => {
-    // If we're already erasing, nothing to do.
     if (phase === "erasing") return;
 
-    // If we're in the middle of typing a line, commit what's been typed so far
-    // so the eraser can properly delete it.
     setTypedLines((prev) => {
       const next = [...prev];
       if (phase === "typing" && currentLine.length > 0) {
@@ -134,7 +136,6 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
       return next;
     });
 
-    // Move eraser to the last line, set char index to its full length
     setTimeout(() => {
       setEraseLineIndex((_) => (typedLines.length + (phase === "typing" && currentLine ? 1 : 0)) - 1);
       const lastText =
@@ -142,15 +143,14 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
           ? currentLine
           : typedLines[typedLines.length - 1]?.text) ?? "";
       setEraseCharIndex(lastText.length);
-      setCurrentLine(""); // active line no longer being typed
+      setCurrentLine("");
       setCharIndex(0);
       setPhase("erasing");
       disarmCursor();
     }, 0);
   }, [phase, currentLine, activeObj.color, typedLines, disarmCursor]);
 
-  // ---------- NEW: detect prop changes; queue & trigger erase-then-retype ----------
-  // We create a stable signature for the prop to avoid deep compares all over.
+  // ---------- detect prop changes; queue & trigger erase-then-retype ----------
   const incomingSignature = useMemo(
     () => linesToType.map((l) => `${l.text}§${l.color ?? ""}`).join("\n"),
     [linesToType]
@@ -161,7 +161,6 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     if (!hasMountedRef.current) return;
     if (incomingSignature === prevSignatureRef.current) return;
 
-    // Prop actually changed → queue the new lines and begin erasing now.
     setQueuedLines(linesToType);
     forceStartErasing();
     prevSignatureRef.current = incomingSignature;
@@ -172,7 +171,6 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     if (phase !== "typing" || !hasLines) return;
     if (lineIndex >= sourceLines.length) return;
 
-    // actively typing → hide cursor
     disarmCursor();
 
     if (charIndex < activeText.length) {
@@ -193,10 +191,10 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
 
       if (!isLast) {
         setLineIndex((i) => i + 1);
-        disarmCursor(); // resume typing → hide cursor again
+        disarmCursor();
       } else {
         setPhase("awaitErase");
-        armCursorAfterDelay(); // waiting state → cursor after delay
+        armCursorAfterDelay();
       }
     }, linePause);
 
@@ -215,36 +213,42 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     disarmCursor,
   ]);
 
-  // ---------- START ERASING (external trigger path preserved) ----------
+  // ---------- START ERASING (external trigger path) with rising-edge guard ----------
   useEffect(() => {
-    if (phase !== "awaitErase" || !eraseTrigger) return;
+    const prev = prevEraseTriggerRef.current;
+    prevEraseTriggerRef.current = eraseTrigger;
+
+    if (phase !== "awaitErase") return;
+    // Only react when eraseTrigger flips from false/undefined -> true
+    if (!eraseTrigger || prev === true) return;
+
     setPhase("erasing");
     setEraseLineIndex(typedLines.length - 1);
     setEraseCharIndex((typedLines[typedLines.length - 1]?.text ?? "").length);
     disarmCursor();
-  }, [phase, eraseTrigger, typedLines, disarmCursor]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, eraseTrigger, typedLines]);
 
-  // ---------- ERASING ----------
+  // ---------- ERASING (idempotent with runId; no nested setState) ----------
   useEffect(() => {
     if (phase !== "erasing") return;
+
+    // Only the latest run's timeout is allowed to commit updates
+    const runId = ++erasingRunRef.current;
 
     if (eraseLineIndex < 0) {
       disarmCursor();
 
-      // Signal erase completion (preserved behavior)
       if (!eraseDoneFiredRef.current) {
         eraseDoneFiredRef.current = true;
         onEraseComplete?.(true);
         setEraseDone?.(true);
       }
 
-      // ---------- NEW: if we have queued lines (from prop change), start typing them ----------
       if (queuedLines && queuedLines.length > 0) {
-        // Switch our "sourceLines" to the queued set and clear the queue.
         setSourceLines(queuedLines);
         setQueuedLines(null);
 
-        // Reset all typing state and begin anew.
         setTypedLines([]);
         setLineIndex(0);
         setCharIndex(0);
@@ -253,14 +257,14 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
         return;
       }
 
-      // Otherwise, we're truly done (no queued updates).
       setPhase("done");
       return;
     }
 
-    disarmCursor();
-
     const t = window.setTimeout(() => {
+      // ignore stale timeout or phase change mid-flight
+      if (erasingRunRef.current !== runId || phase !== "erasing") return;
+
       const lineObj = typedLines[eraseLineIndex] || { text: "" };
       const lineText = lineObj.text ?? "";
 
@@ -274,13 +278,14 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
         });
         setEraseCharIndex((c) => c - 1);
       } else {
-        setTypedLines((prev) => {
-          const out = prev.slice(0, -1);
-          const nextIdx = out.length - 1;
-          setEraseLineIndex(nextIdx);
-          setEraseCharIndex(nextIdx >= 0 ? (out[nextIdx]?.text ?? "").length : 0);
-          return out;
-        });
+        // Remove last line, then update indices separately (no nested setState)
+        const nextLines = typedLines.slice(0, -1);
+        const nextIdx = nextLines.length - 1;
+        const nextLen = nextIdx >= 0 ? (nextLines[nextIdx]?.text ?? "").length : 0;
+
+        setTypedLines(nextLines);
+        setEraseLineIndex(nextIdx);
+        setEraseCharIndex(nextLen);
       }
     }, eraseSpeed);
 
