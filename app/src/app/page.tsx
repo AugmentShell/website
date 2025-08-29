@@ -17,9 +17,10 @@ export default function Home() {
 
   return (
     <>
+      <div id="preview"/>
       <Navbar/>
 
-      <TerminalWindow className="mt-[-16px]"/>
+      <TerminalWindow className="mt-[16px]"/>
 
       <div className="flex flex-col items-center gap-y-5 md:gap-y-10 mt-5 md:mt-20">
       <Card className="flex flex-col items-center w-[85%]">
@@ -33,9 +34,11 @@ export default function Home() {
       </DialogTrigger>
       </div>
 
+      <div id="features"/>
       <Features/>
       <MobileFeatures/>
 
+      <div id="faq"/>
       <FAQ/>
       <MobileFAQ/>
 

@@ -10,11 +10,32 @@ function cn(...classes: Array<string | undefined | false | null>) {
 
 type Variant = "default" | "warning" | "link";
 type Size = "xs" | "sm" | "md" | "lg";
-type OwnProps = { variant?: Variant; size?: Size };
+
+// 👇 NEW: add scrollToId & smoothScroll props
+type OwnProps = {
+  variant?: Variant;
+  size?: Size;
+  scrollToId?: string;      // e.g., "contact-footer"
+  smoothScroll?: boolean;   // default true
+};
+
 type ButtonProps = OwnProps & HTMLMotionProps<"button">;
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "default", size = "md", disabled, ...props }, ref) => {
+  (
+    {
+      className,
+      variant = "default",
+      size = "md",
+      disabled,
+      // 👇 NEW defaults
+      scrollToId,
+      smoothScroll = true,
+      onClick, // keep any caller-provided onClick
+      ...props
+    },
+    ref
+  ) => {
     const colors = React.useMemo(() => {
       const palette: Record<
         Variant,
@@ -52,7 +73,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       lg: variant === "link" ? "text-lg px-0 py-0" : "px-6 py-3 text-lg",
     };
 
-    // Base (idle) style
     const animateStyle = React.useMemo(() => {
       return variant === "link"
         ? ({
@@ -66,33 +86,41 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           } as const);
     }, [variant, colors.bg, colors.fg]);
 
-    // Hover styles per variant
     const hoverStyle =
-  variant === "link"
-    ? {
-        scale: 1.1,
-        textDecoration: "underline" as const,
-        transition: { type: "tween" as const, duration: 0.12 },
-      }
-    : {
-        backgroundColor: colors.hoverBg,
-        color: colors.hoverFg,
-        scale: 1.1,
-        transition: { type: "tween" as const, duration: 0.12 },
-      };
+      variant === "link"
+        ? {
+            scale: 1.1,
+            textDecoration: "underline" as const,
+            transition: { type: "tween" as const, duration: 0.12 },
+          }
+        : {
+            backgroundColor: colors.hoverBg,
+            color: colors.hoverFg,
+            scale: 1.1,
+            transition: { type: "tween" as const, duration: 0.12 },
+          };
 
-const tapStyle =
-  variant === "link"
-    ? {
-        scale: 0.98,
-        transition: { type: "tween" as const, duration: 0.08 },
+    const tapStyle =
+      variant === "link"
+        ? { scale: 0.98, transition: { type: "tween" as const, duration: 0.08 } }
+        : {
+            backgroundColor: colors.hoverBg,
+            color: colors.hoverFg,
+            scale: 0.95,
+            transition: { type: "tween" as const, duration: 0.08 },
+          };
+
+    // 👇 NEW: wrap onClick to perform scroll if scrollToId is provided
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (scrollToId) {
+        const el = document.getElementById(scrollToId);
+        if (el) {
+          el.scrollIntoView({ behavior: smoothScroll ? "smooth" : "auto" });
+        }
       }
-    : {
-        backgroundColor: colors.hoverBg,
-        color: colors.hoverFg,
-        scale: 0.95,
-        transition: { type: "tween" as const, duration: 0.08 },
-      };
+      // call any consumer onClick after
+      onClick?.(e);
+    };
 
     return (
       <motion.button
@@ -109,6 +137,7 @@ const tapStyle =
         whileHover={!disabled ? hoverStyle : undefined}
         whileTap={!disabled ? tapStyle : undefined}
         disabled={disabled}
+        onClick={handleClick}   // 👈 use the wrapped handler
         {...props}
       />
     );
