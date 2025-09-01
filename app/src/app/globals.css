@@ -91,7 +91,10 @@ html {
   @apply bg-[url('/GRADIENT_CARD_489x80.svg')] bg-no-repeat bg-center bg-cover;
   }
   .terminal {
-    @apply bg-[url('/GRADIENT_TERMINAL_1121x583.svg')] bg-no-repeat bg-center bg-cover;
+    @apply bg-[url('/GRADIENT_TERMINAL_SUCCESS_sm.svg')]
+         bg-no-repeat bg-center bg-cover
+         bg-clip-padding
+         border-[#1E2420CC]; 
   }
 }
 
