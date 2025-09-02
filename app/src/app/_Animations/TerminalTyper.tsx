@@ -14,6 +14,11 @@ interface TerminalTyperProps {
   cursorDelay?: number;                 // ms to delay showing the cursor during pauses (default 500)
   onEraseComplete?: (done: boolean) => void;
   setEraseDone?: (done: boolean) => void;
+
+  /** NEW: typing completion notifications */
+  onTypeComplete?: (done: boolean) => void;
+  setTypeDone?: (done: boolean) => void;
+
   className?: string;                   // extra classes for outer wrapper
 }
 
@@ -27,6 +32,11 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   cursorDelay = 500,
   onEraseComplete,
   setEraseDone,
+
+  // NEW
+  onTypeComplete,
+  setTypeDone,
+
   className = "",
 }) => {
   // ---------- NEW: "sourceLines" is what we are currently typing toward ----------
@@ -62,6 +72,9 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   // NEW: idempotency for erasing timeouts
   const erasingRunRef = useRef(0);
 
+  // NEW: fire "typing done" exactly once per typing run
+  const typeDoneFiredRef = useRef<boolean>(false);
+
   const hasLines = sourceLines.length > 0;
 
   const activeObj: Line = useMemo(
@@ -80,6 +93,8 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
   useEffect(() => {
     if (setEraseTrigger) setEraseTrigger(false);
     hasMountedRef.current = true;
+    // also ensure typing-done can fire on the first run
+    typeDoneFiredRef.current = false;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -166,6 +181,13 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     prevSignatureRef.current = incomingSignature;
   }, [incomingSignature, linesToType, forceStartErasing]);
 
+  // ---------- Reset "typing-done" flag when a new typing run begins ----------
+  useEffect(() => {
+    if (phase === "typing" && lineIndex === 0 && charIndex === 0) {
+      typeDoneFiredRef.current = false;
+    }
+  }, [phase, lineIndex, charIndex]);
+
   // ---------- TYPING ----------
   useEffect(() => {
     if (phase !== "typing" || !hasLines) return;
@@ -195,6 +217,13 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
       } else {
         setPhase("awaitErase");
         armCursorAfterDelay();
+
+        // NEW: Notify parent exactly once when typing all lines is done
+        if (!typeDoneFiredRef.current) {
+          typeDoneFiredRef.current = true;
+          onTypeComplete?.(true);
+          setTypeDone?.(true);
+        }
       }
     }, linePause);
 
@@ -211,6 +240,8 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     activeObj.color,
     armCursorAfterDelay,
     disarmCursor,
+    onTypeComplete,
+    setTypeDone,
   ]);
 
   // ---------- START ERASING (external trigger path) with rising-edge guard ----------
@@ -253,6 +284,11 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
         setLineIndex(0);
         setCharIndex(0);
         setCurrentLine("");
+
+        // start a fresh typing run → reset guards
+        typeDoneFiredRef.current = false;
+        eraseDoneFiredRef.current = false;
+
         setPhase("typing");
         return;
       }

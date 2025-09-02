@@ -19,7 +19,7 @@ export default function DialogTerminal({ className = "", linesToType=defaultMess
       <div
         className={
           // defaults, followed by your overrides so they win
-          `h-[75vh] w-full bg-[#2a2b2a] border-8 px-0.5 rounded terminal ${className}`
+          `h-[75vh] w-full bg-[#2a2b2a] border-8 px-0.5 rounded terminal terminal-frame-success ${className}`
         }
       >
         <div className="body-2 h-full">

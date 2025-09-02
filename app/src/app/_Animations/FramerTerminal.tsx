@@ -72,7 +72,7 @@ export default function FramerTerminalVariants({
       <AnimatePresence mode="wait">
         <motion.div
           key={isOpen ? "open" : "closed"} // helps exit when unmounting the whole thing
-          className={` h-[75vh] md:h-[115vh] lg:h-[90vh] xl:h-[67vh] w-full bg-[#2a2b2a] border-8 px-0.5 rounded terminal ${className}`}
+          className={` h-[75vh] md:h-[115vh] lg:h-[90vh] xl:h-[67vh] w-full bg-[#2a2b2a] border-8 px-0.5 rounded terminal terminal-frame-success ${className}`}
           variants={curtainVariants}
           initial="hidden"
           animate={controls}
