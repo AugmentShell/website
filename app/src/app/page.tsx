@@ -1,11 +1,8 @@
 import { Button } from "./_Components/Button";
 import { Card } from "./_Components/Card";
-import { InfoStack } from "./_Components/InfoStack";
 import { Navbar } from "./_Components/Navbar";
 import TerminalWindow from "./_Components/TerminalWindow";
-import { LongArrowRight } from "./_Components/Arrow"
 import { DialogTrigger } from "./_Components/NextjsEventHandlerCompliance/DialogTrigger";
-import DialogTerminal from "./_Components/DialogContent/DialogTerminal";
 import { ContactForm } from "./_Components/DialogContent/ContactForm";
 import Image from "next/image";
 import { FAQ } from "./_Components/FAQ";

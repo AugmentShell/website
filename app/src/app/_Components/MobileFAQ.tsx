@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import type { ComponentProps } from "react";
 import { motion, useReducedMotion, type Transition } from "framer-motion";
 

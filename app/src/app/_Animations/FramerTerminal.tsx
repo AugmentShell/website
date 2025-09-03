@@ -43,7 +43,6 @@ export default function FramerTerminalVariants({
 
   const controls = useAnimationControls();
   const [showTyper, setShowTyper] = useState(false);
-  const [erase, setErase] = useState(true)
 
   // Drive the parent animation, then mount/unmount the typer after it completes.
   useEffect(() => {

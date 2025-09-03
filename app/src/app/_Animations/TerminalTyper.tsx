@@ -152,7 +152,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     });
 
     setTimeout(() => {
-      setEraseLineIndex((_) => (typedLines.length + (phase === "typing" && currentLine ? 1 : 0)) - 1);
+      setEraseLineIndex(() => (typedLines.length + (phase === "typing" && currentLine ? 1 : 0)) - 1);
       const lastText =
         (phase === "typing" && currentLine
           ? currentLine
