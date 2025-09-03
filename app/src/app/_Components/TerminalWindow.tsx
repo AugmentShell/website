@@ -96,12 +96,12 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
         transition={{ duration: 1, ease: "easeInOut" }}
       >
         <Button
-          className="!transition-none"   // ⟵ important: no CSS color transition here
+          className={done
+            ? "transition-[background-color,color] !duration-[2000ms] ease-in-out"
+            : "!transition-none"}
           disabled={!typeDone}
           variant={done ? "default" : "warning"}
-          onClick={() => {
-            if (!done) setErase(true);
-          }}
+          onClick={() => { if (!done) setErase(true); }}
         >
           <h3>ACTIVATE AUGMENTSHELL</h3>
         </Button>
