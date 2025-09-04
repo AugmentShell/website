@@ -12,7 +12,8 @@ export const Navbar = () => {
     openDialog(<ContactForm></ContactForm>)
   }
 
-  return <nav className=" h-16 w-full card flex px-6 xl:px-24 justify-between">
+  return <>
+    <nav className=" h-16 w-full card flex px-6 xl:px-24 justify-between fixed z-[1000]">
 
     {/* Logo container */}
 
@@ -32,13 +33,15 @@ export const Navbar = () => {
     <div className="hidden lg:flex lg:basis-6/12 xl:basis-5/12">
 
         <ul className="flex h-full w-full items-center nav-text justify-between">
-            <Button variant="link"><p className="body-1">preview</p></Button>
-            <Button variant="link"><p className="body-1">features</p></Button>
-            <Button variant="link"><p className="body-1">faq</p></Button>
+            <Button variant="link" scrollToId="preview"><p className="body-1">preview</p></Button>
+            <Button variant="link" scrollToId="features"><p className="body-1">features</p></Button>
+            <Button variant="link" scrollToId="faq"><p className="body-1">faq</p></Button>
             <Button onClick={openContactForm} variant="link"><p className="body-1">join</p></Button>
         </ul>
 
     </div>
 
   </nav>;
+  <div className=" hidden md:absolute h-16 w-full "></div>
+  </>
 };

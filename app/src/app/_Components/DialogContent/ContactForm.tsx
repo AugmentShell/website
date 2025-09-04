@@ -62,6 +62,7 @@ export function ContactForm() {
 
       <Button 
         type="submit"
+        variant="link"
       >
         <h3>Submit</h3>
       </Button>

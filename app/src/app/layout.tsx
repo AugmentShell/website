@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Fjalla_One, Cantarell } from "next/font/google";
 import "./globals.css";
-import { DialogProvier } from "./_Components/DialogProvider";
+import { DialogProvider } from "./_Components/DialogProvider";
 
 const fjallaOne = Fjalla_One({
   weight: "400",
@@ -27,19 +27,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <DialogProvier>
+      <DialogProvider>
         <body
           className={`${fjallaOne.variable} ${cantarell.variable} antialiased w-full
           bg-[url(/Background_sm_640.svg)] 
           md:bg-[url(/Background_md_768.svg)] 
           lg:bg-[url(/Background_lg_1024.svg)] 
-          bg-no-repeat bg-cover bg-center`}
+          bg-no-repeat bg-cover
+          bg-[position:0_-260vh]`}
         >
           <main className="flex flex-col items-center gap-10">
             {children}
           </main>
         </body>
-      </DialogProvier>
+      </DialogProvider>
     </html>
   );
 }
