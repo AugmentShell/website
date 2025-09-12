@@ -32,19 +32,18 @@ html {
   .nav-text { @apply text-xs md:text-2xl xl:text-4xl font-normal; }
 
   input, textarea, select { color-scheme: dark; }
-
-  /* (autofill styles unchanged) ... */
 }
 
 /* COMPONENTS */
 @layer components {
   .btn { @apply bg-button; }
 
+  /* UPDATED: card uses radial gradient instead of SVG */
   .card {
-    @apply bg-[url('/GRADIENT_CARD_489x80.svg')] bg-no-repeat bg-center bg-cover;
+    background: radial-gradient(circle at -10% -200%, #386641, #1D1D1D 60%, #000000 100%);
+    @apply bg-no-repeat bg-center bg-cover;
   }
 
-  /* UPDATED: backgrounds ONLY (no border, no bg-clip needed here) */
   .terminal {
     @apply bg-[url('/GRADIENT_TERMINAL_SUCCESS_sm.svg')]
            bg-no-repeat bg-center bg-cover;
@@ -54,7 +53,7 @@ html {
            bg-no-repeat bg-center bg-cover;
   }
 
-  /* NEW: frame border color classes (used on the foreground container) */
+  /* NEW: frame border color classes */
   .terminal-frame-success {
     @apply border-[16px] border-solid;
     border-color: var(--success-border);
