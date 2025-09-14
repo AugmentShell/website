@@ -4,7 +4,6 @@ import { Navbar } from "./_Components/Navbar";
 import TerminalWindow from "./_Components/TerminalWindow";
 import { DialogTrigger } from "./_Components/NextjsEventHandlerCompliance/DialogTrigger";
 import { ContactForm } from "./_Components/DialogContent/ContactForm";
-import Image from "next/image";
 import { FAQ } from "./_Components/FAQ";
 import { MobileFAQ } from "./_Components/MobileFAQ";
 import { Features } from "./_Components/Features";

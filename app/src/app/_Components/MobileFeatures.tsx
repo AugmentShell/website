@@ -1,9 +1,5 @@
-import { Button } from "./Button"
 import { Card } from "./Card"
 import { InfoStack } from "./InfoStack"
-import { DialogTrigger } from "./NextjsEventHandlerCompliance/DialogTrigger"
-import DialogTerminal from "./DialogContent/DialogTerminal"
-import { LongArrowRight } from "./Arrow"
 import Carousel from "./Carousel"
 
 export const MobileFeatures = () => {
