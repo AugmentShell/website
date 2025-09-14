@@ -22,6 +22,14 @@ interface TerminalTyperProps {
   className?: string;                   // extra classes for outer wrapper
 }
 
+const INVISIBLE = "\u200B"; // zero-width space
+
+const normalizeLines = (lines: Line[]): Line[] =>
+  lines.map((l) => ({
+    ...l,
+    text: (l.text ?? "") === "" ? INVISIBLE : l.text!,
+  }));
+
 const TerminalTyper: React.FC<TerminalTyperProps> = ({
   linesToType,
   typingSpeed = 20,
@@ -39,8 +47,8 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
 
   className = "",
 }) => {
-  // ---------- NEW: "sourceLines" is what we are currently typing toward ----------
-  const [sourceLines, setSourceLines] = useState<Line[]>(() => linesToType);
+  // ---------- "sourceLines" is what we are currently typing toward ----------
+  const [sourceLines, setSourceLines] = useState<Line[]>(() => normalizeLines(linesToType));
   const [queuedLines, setQueuedLines] = useState<Line[] | null>(null);
 
   // phases
@@ -81,10 +89,10 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     () =>
       hasLines && lineIndex < sourceLines.length
         ? sourceLines[lineIndex]
-        : { text: "" },
+        : { text: INVISIBLE },
     [hasLines, lineIndex, sourceLines]
   );
-  const activeText = activeObj.text ?? "";
+  const activeText = activeObj.text ?? INVISIBLE;
 
   // Non-interactive (no text selection or pointer changes), but allow scrolling
   const nonInteractive = "select-none [cursor:default]";
@@ -156,7 +164,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
       const lastText =
         (phase === "typing" && currentLine
           ? currentLine
-          : typedLines[typedLines.length - 1]?.text) ?? "";
+          : typedLines[typedLines.length - 1]?.text) ?? INVISIBLE;
       setEraseCharIndex(lastText.length);
       setCurrentLine("");
       setCharIndex(0);
@@ -176,7 +184,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
     if (!hasMountedRef.current) return;
     if (incomingSignature === prevSignatureRef.current) return;
 
-    setQueuedLines(linesToType);
+    setQueuedLines(normalizeLines(linesToType));
     forceStartErasing();
     prevSignatureRef.current = incomingSignature;
   }, [incomingSignature, linesToType, forceStartErasing]);
@@ -218,7 +226,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
         setPhase("awaitErase");
         armCursorAfterDelay();
 
-        // NEW: Notify parent exactly once when typing all lines is done
+        // Notify parent exactly once when typing all lines is done
         if (!typeDoneFiredRef.current) {
           typeDoneFiredRef.current = true;
           onTypeComplete?.(true);
@@ -255,7 +263,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
 
     setPhase("erasing");
     setEraseLineIndex(typedLines.length - 1);
-    setEraseCharIndex((typedLines[typedLines.length - 1]?.text ?? "").length);
+    setEraseCharIndex((typedLines[typedLines.length - 1]?.text ?? INVISIBLE).length);
     disarmCursor();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [phase, eraseTrigger, typedLines]);
@@ -301,15 +309,15 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
       // ignore stale timeout or phase change mid-flight
       if (erasingRunRef.current !== runId || phase !== "erasing") return;
 
-      const lineObj = typedLines[eraseLineIndex] || { text: "" };
-      const lineText = lineObj.text ?? "";
+      const lineObj = typedLines[eraseLineIndex] || { text: INVISIBLE };
+      const lineText = lineObj.text ?? INVISIBLE;
 
       if (eraseCharIndex > 0) {
         setTypedLines((prev) => {
           const out = [...prev];
-          const obj = { ...(out[eraseLineIndex] || { text: "" }) };
+          const obj = { ...(out[eraseLineIndex] || { text: INVISIBLE }) };
           obj.text = lineText.slice(0, eraseCharIndex - 1);
-          out[eraseLineIndex] = obj;
+        out[eraseLineIndex] = obj;
           return out;
         });
         setEraseCharIndex((c) => c - 1);
@@ -317,7 +325,7 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
         // Remove last line, then update indices separately (no nested setState)
         const nextLines = typedLines.slice(0, -1);
         const nextIdx = nextLines.length - 1;
-        const nextLen = nextIdx >= 0 ? (nextLines[nextIdx]?.text ?? "").length : 0;
+        const nextLen = nextIdx >= 0 ? (nextLines[nextIdx]?.text ?? INVISIBLE).length : 0;
 
         setTypedLines(nextLines);
         setEraseLineIndex(nextIdx);
@@ -357,7 +365,10 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
           className="block w-full min-w-0 whitespace-normal break-normal [hyphens:none] pointer-events-none"
           style={ln.color ? { color: ln.color } : undefined}
         >
-          <span className="inline">{ln.text}</span>
+          {/* keep a real inline node so the line has height even if it's INVISIBLE */}
+          <span className="inline" aria-hidden={ln.text === INVISIBLE}>
+            {ln.text}
+          </span>
           {((phase === "erasing" && i === eraseLineIndex) ||
             (phase === "awaitErase" && i === typedLines.length - 1)) && (
             <span
@@ -377,7 +388,9 @@ const TerminalTyper: React.FC<TerminalTyperProps> = ({
           className="block w-full min-w-0 whitespace-normal break-normal [hyphens:none] pointer-events-none"
           style={activeObj.color ? { color: activeObj.color } : undefined}
         >
-          <span className="inline">{currentLine}</span>
+          <span className="inline" aria-hidden={activeText === INVISIBLE}>
+            {currentLine}
+          </span>
           <span
             className={`caret-fixed [font-size:inherit] [line-height:inherit] align-baseline ${
               showCursor ? "caret-blink opacity-100" : "opacity-0"

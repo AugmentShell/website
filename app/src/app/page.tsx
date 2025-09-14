@@ -17,7 +17,7 @@ export default function Home() {
       <div id="preview"/>
       <Navbar/>
 
-      <TerminalWindow className="mt-[16px]"/>
+      <TerminalWindow/>
 
       <div className="flex flex-col items-center gap-y-5 md:gap-y-10 mt-5 md:mt-20">
       <Card className="flex flex-col items-center w-[85%]">
@@ -39,15 +39,15 @@ export default function Home() {
       <FAQ/>
       <MobileFAQ/>
 
-      <Card className="flex flex-col items-center w-[85%] mt-5 md:mt-20">
+      <Card className="flex flex-col items-center w-[85%] my-5 md:mt-20">
         <h1 className="mb-4 text-center">Stop Fighting Fires. Start Commanding Them.</h1>
         <p className="body-1 mb-8 md:mb-16">Whether you’re starting up or it’s all going down. AugmentShell is here.</p>
         <DialogTrigger content={<ContactForm/>}>
-          <Button variant="link"><h2>Join For Updates</h2></Button>
+          <Button variant="link"><h2>Request Early Access</h2></Button>
         </DialogTrigger>
       </Card>
 
-      <Card className="my-4 md:my-12">
+      {/* <Card className="my-4 md:my-12">
           <Image
             src="/logo-clear-background.svg"
             alt="Augment Shell"
@@ -56,7 +56,7 @@ export default function Home() {
             sizes="100vw"
             className="h-auto w-[80vw]"
           />
-      </Card>
+      </Card> */}
 
     </>
   );

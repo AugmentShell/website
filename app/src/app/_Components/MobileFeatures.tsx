@@ -12,38 +12,31 @@ export const MobileFeatures = () => {
       <h1 className="mx-8">A Smarter, Safer Way to Operate.</h1>
 
       <Card className="flex items-center w-[90%] p-0">
-        <Carousel>
-          <InfoStack className="flex flex-col items-center gap-y-4 px-4 w-full h-[25vh] justify-between">
+        <Carousel className="h-fit">
+          <InfoStack className="flex flex-col items-center gap-y-4 px-4 w-full mb-2">
             <h2 className="w-fit">The DevOps Perception Layer</h2>
             <p className="body-2">
-              Deeply understands your operational environment. It sees your Docker containers, Kubernetes pods,
-              and systemd services to generate hyper-relevant plans.
+              AugmentShell sees your system like a seasoned SRE. It automatically detects your containers, 
+              Kubernetes context, cloud configurations, and systemd services to generate plans with surgical precision.
             </p>
-            <DialogTrigger content={<DialogTerminal />}>
-              <Button className="rounded-3xl"><LongArrowRight size={18}/></Button>
-            </DialogTrigger>
           </InfoStack>
 
-          <InfoStack className="flex flex-col items-center gap-y-4 px-4 w-full h-[25vh] justify-between">
+          <InfoStack className="flex flex-col items-center gap-y-4 px-4 w-full mb-2">
             <h2 className="w-fit">Safety-First Planning Layer</h2>
             <p className="body-2">
-              Our core philosophy. Every action is first presented as a clear, human-readable plan. You see the exact
-              commands before they run. You are always in command.
+              Our non-negotiable promise. Every action is first proposed as a 
+              clear, auditable plan. You see the exact commands before they run and must give explicit approval. 
+              No black boxes. No surprises.
             </p>
-            <DialogTrigger content={<DialogTerminal />}>
-              <Button className="rounded-3xl"><LongArrowRight size={18} /></Button>
-            </DialogTrigger>
           </InfoStack>
 
-          <InfoStack className="flex flex-col items-center gap-y-4 px-4 w-full h-[25vh] justify-between">
+          <InfoStack className="flex flex-col items-center gap-y-4 px-4 w-full mb-2">
             <h2 className="w-fit">The Open Execution Layer</h2>
             <p className="body-2">
-              We are Switzerland. Bring your own AI model; OpenAI, Claude, Llama 3, or plug directly into your
-              enterprise&apos;s secure cloud instance. No vendor lock-in.
+              We are not another walled garden. Bring your preferred AI model, such as OpenAI,
+              Claude, or a local Llama 3 instance. We provide the universal, safety-first 
+              chassis for the engine of your choice.
             </p>
-            <DialogTrigger content={<DialogTerminal />}>
-              <Button className="rounded-3xl"><LongArrowRight size={18}/></Button>
-            </DialogTrigger>
           </InfoStack>
         </Carousel>
       </Card>

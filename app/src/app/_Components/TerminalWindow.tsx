@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { mixedSuccess, warningMix } from "../_Animations/messages";
+import { red, green } from "../_Animations/messages";
 import TerminalTyper from "../_Animations/TerminalTyper";
 import { Button } from "./Button";
 import { motion } from "framer-motion";
@@ -16,7 +16,7 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
   return (
     <div className={["flex flex-col items-center w-full", className].join(" ")}>
       {/* === Container with a hard clip mask for the backgrounds === */}
-      <div className="relative h-[75vh] w-[80%] rounded-2xl">
+      <div className="relative h-[40vh] lg:h-[75vh] w-[80%] rounded-2xl">
         {/* MASK: clips both BG layers perfectly to the same radius */}
         <div className="absolute inset-0 rounded-2xl overflow-hidden">
           {/* BG FAIL */}
@@ -40,7 +40,7 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
         {/* BORDER OVERLAY: sits on top, so nothing can “leak” past it */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute inset-0 rounded-2xl border-[16px] border-solid transition-colors duration-[2000ms] ease-in-out"
+          className="pointer-events-none absolute inset-0 rounded-2xl border-[8px] lg:border-[16px] border-solid transition-colors duration-[2000ms] ease-in-out"
           style={{ boxSizing: "border-box" }}
           initial={false}
           animate={{
@@ -67,7 +67,7 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
                 linePause={50}
                 eraseTrigger={erase}
                 setEraseDone={setDone}
-                linesToType={warningMix}
+                linesToType={red}
                 setTypeDone={setTypeDone}
               />
             ) : (
@@ -78,7 +78,7 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
                 eraseTrigger={erase}
                 setEraseDone={setDone}
                 setEraseTrigger={setErase}
-                linesToType={mixedSuccess}
+                linesToType={green}
               />
             )}
           </div>
@@ -87,7 +87,7 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
 
       {/* Button (long transition, no glow) */}
       <motion.div
-        className="mt-6"
+        className="mt-6 hidden md:flex"
         initial={false}
         animate={{
           opacity: typeDone ? 1 : 0.6,
@@ -101,6 +101,29 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
             : "!transition-none"}
           disabled={!typeDone}
           variant={done ? "default" : "warning"}
+          onClick={() => { if (!done) setErase(true); }}
+        >
+          <h3>ACTIVATE AUGMENTSHELL</h3>
+        </Button>
+      </motion.div>
+
+      {/* Button (long transition, no glow) */}
+      <motion.div
+        className="mt-6 flex md:hidden"
+        initial={false}
+        animate={{
+          opacity: typeDone ? 1 : 0.6,
+          filter: typeDone ? "none" : "grayscale(0.7)",
+        }}
+        transition={{ duration: 1, ease: "easeInOut" }}
+      >
+        <Button
+          className={done
+            ? "transition-[background-color,color] !duration-[2000ms] ease-in-out"
+            : "!transition-none"}
+          disabled={!typeDone}
+          variant={done ? "default" : "warning"}
+          size="xs"
           onClick={() => { if (!done) setErase(true); }}
         >
           <h3>ACTIVATE AUGMENTSHELL</h3>
