@@ -10,7 +10,7 @@
 
   /* NEW: border color tokens (same values you used before) */
   --success-border: #1E2420CC; /* was in .terminal border */
-  --fail-border:    #BC47491A; /* was in .terminal-fail border */
+  --fail-border:    #261010; /* was in .terminal-fail border */
 }
 
 html { 
@@ -24,7 +24,7 @@ html {
   h1, h2, h3, h4, h5, h6 { @apply font-header; }
   h1 { @apply text-xl sm:text-2xl md:text-6xl font-normal sm:leading-10 md:leading-20; }
   h2 { @apply text-base sm:text-2xl md:text-5xl font-normal sm:leading-10 md:leading-15; }
-  h3 { @apply text-2xl font-normal; }
+  h3 { @apply text-base md:text-2xl font-normal; }
 
   .body-1 { @apply text-base md:text-4xl font-normal; }
   .body-2 { @apply text-xs md:text-2xl font-normal; }
@@ -32,19 +32,18 @@ html {
   .nav-text { @apply text-xs md:text-2xl xl:text-4xl font-normal; }
 
   input, textarea, select { color-scheme: dark; }
-
-  /* (autofill styles unchanged) ... */
 }
 
 /* COMPONENTS */
 @layer components {
   .btn { @apply bg-button; }
 
+  /* UPDATED: card uses radial gradient instead of SVG */
   .card {
-    @apply bg-[url('/GRADIENT_CARD_489x80.svg')] bg-no-repeat bg-center bg-cover;
+    background: radial-gradient(circle at 25% -200%, #386641, #182B1B, #1D1D1D);
+    @apply bg-no-repeat bg-center bg-cover;
   }
 
-  /* UPDATED: backgrounds ONLY (no border, no bg-clip needed here) */
   .terminal {
     @apply bg-[url('/GRADIENT_TERMINAL_SUCCESS_sm.svg')]
            bg-no-repeat bg-center bg-cover;
@@ -54,7 +53,7 @@ html {
            bg-no-repeat bg-center bg-cover;
   }
 
-  /* NEW: frame border color classes (used on the foreground container) */
+  /* NEW: frame border color classes */
   .terminal-frame-success {
     @apply border-[16px] border-solid;
     border-color: var(--success-border);

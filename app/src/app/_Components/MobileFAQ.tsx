@@ -1,21 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { ComponentProps } from "react";
 import { motion, useReducedMotion, type Transition } from "framer-motion";
 
 import { Card } from "./Card";
-import FramerTerminal from "../_Animations/FramerTerminal";
-import { mixedErrors, mixedSuccess, fullSuccess } from "../_Animations/messages";
 import { ChevronRight } from "lucide-react";
 
-// If your FramerTerminal exposes the type, great; otherwise we just pass the arrays directly.
-type LinesProp = ComponentProps<typeof FramerTerminal>["linesToType"];
-
-const FAQ_ITEMS: { title: string; lines: LinesProp }[] = [
-  { title: "How do we get started?", lines: mixedErrors },
-  { title: "Can we really trust AI agents to accomplish tasks?", lines: mixedSuccess },
-  { title: "What platforms do you currently support?", lines: fullSuccess },
+const FAQ_ITEMS: { title: string; answers: string }[] = [
+  { title: "Is this just another ChatGPT wrapper?", answers: "No. Simple wrappers are Information Agents—they give you text. AugmentShell is an Execution Agent. Our power comes from our deep Perception Layer that understands your live system, and our Safety Layer that turns AI suggestions into auditable, approved plans." },
+  { title: "How do you prevent the AI from doing something dangerous?", answers: "This is the core of our philosophy. The AI is never in control; you are. Every action, from a file change to a kubectl apply, must be presented in a clear plan that the human operator explicitly approves. We are a co-pilot, not an autopilot." },
+  { title: "What kind of environments does this work in?", answers: "AugmentShell is built for the modern DevOps landscape. Our Private Alpha will be focused on Linux environments, with deep integrations for Docker and Kubernetes. Our enterprise plan will support self-hosting in your own private cloud (AWS, GCP, Azure)." },
 ];
 
 export const MobileFAQ = () => {
@@ -91,14 +85,7 @@ export const MobileFAQ = () => {
                 >
                   {/* Mount each terminal at most once, then keep it mounted (no churn) */}
                   {mounted[i] && (
-                    <FramerTerminal
-                      // Do NOT key this; do NOT conditionally mount/unmount on every toggle
-                      className="[--panel-h:100%]"
-                      linesToType={item.lines}
-                      // If your FramerTerminal supports isOpen, you can pass it;
-                      // otherwise it will just keep its own typing logic running.
-                      // isOpen={isActive}
-                    />
+                    <Card>{item.answers}</Card>
                   )}
                 </motion.div>
               </motion.div>

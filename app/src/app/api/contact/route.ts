@@ -1,3 +1,12 @@
+import { createClient } from "@supabase/supabase-js";
+
+const createSupabaseServerClient = () => {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+
 export async function POST(req: Request) {
   // If you used a <form> with FormData, read it like this:
   const form = await req.formData();
@@ -12,10 +21,17 @@ export async function POST(req: Request) {
     return new Response(JSON.stringify({ ok: false, error: "Invalid input" }), { status: 400 });
   }
 
-  // TODO: send an email, write to DB, forward to your helpdesk, etc.
-  // e.g., await sendEmail({ name, email, message })
+  const supabase = createSupabaseServerClient();
 
-  // You can return JSON (the browser will navigate to a JSON page),
-  // or redirect back with a query param to show a "Thanks" message.
+  const { error } = await supabase.from("submissions").insert({
+    name,
+    email,
+    message,
+  });
+
+  if (error) {
+    return Response.json({ ok: false, error: error.message }, { status: 500 });
+  }
+
   return Response.json({ ok: true });
 }
