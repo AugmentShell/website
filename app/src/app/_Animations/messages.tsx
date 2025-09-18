@@ -107,19 +107,19 @@ export const warningMix: MessageLine[] = [
 
 export const green: MessageLine[] = [
   { text: 'augmentshell "The web-api pod in prod is crash-looping. Find out why."', color: "#00DD00" },
-  { text: "", color: "" },
-  { text: "🤖 Analyzing system state...", color: "#888888" },
-  { text: "✓ Kubernetes context 'prod-us-east-1' found.", color: "#33FF33" },
-  { text: "✓ Pod 'web-api-7c5b6d...' status: CrashLoopBackOff.", color: "#33FF33" },
-  { text: "✓ Fetching logs from pod...", color: "#33FF33" },
-  { text: "", color: "" },
-  { text: "🧠 Generated diagnostic plan:", color: "#00DD00" },
-  { text: "01... Analyze pod logs for critical errors.", color: "#FFFFFF" },
-  { text: "02... Describe pod events for deployment issues.", color: "#FFFFFF" },
-  { text: "03... Check resource limits (CPU/Memory).", color: "#FFFFFF" },
-  { text: "04... Propose a fix based on findings.", color: "#FFFFFF" },
-  { text: "", color: "" },
-  { text: "...Execute this plan? [Y/n]", color: "#00DD00" },
+  { text: "", color: "#FFFFFF" },
+  { text: "🤖 Analyzing system state...", color: "#6A994E" },
+  { text: "✓ Kubernetes context 'prod-us-east-1' found.", color: "#A7C957" },
+  { text: "✓ Pod 'web-api-7c5b6d...' status: CrashLoopBackOff.", color: "#A7C957" },
+  { text: "✓ Fetching logs from pod...", color: "#A7C957" },
+  { text: "", color: "#FFFFFF" },
+  { text: "🧠 Generated diagnostic plan:", color: "#6A994E" },
+  { text: "01... Analyze pod logs for critical errors.", color: "#A7C957" },
+  { text: "02... Describe pod events for deployment issues.", color: "#A7C957" },
+  { text: "03... Check resource limits (CPU/Memory).", color: "#A7C957" },
+  { text: "04... Propose a fix based on findings.", color: "#A7C957" },
+  { text: "", color: "#FFFFFF" },
+  { text: "...Execute this plan? [Y/n]", color: "#6A994E" },
 ];
 
 export const red: MessageLine[] = [

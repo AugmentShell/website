@@ -26,7 +26,7 @@ export default function Home() {
           transparent, and approved plans.</p>
       </Card>
       <DialogTrigger content={<ContactForm/>}>
-        <Button><h2>Join for Updates</h2></Button>
+        <Button><h2>Request Early Access</h2></Button>
       </DialogTrigger>
       </div>
 
@@ -38,13 +38,14 @@ export default function Home() {
       <FAQ/>
       <MobileFAQ/>
 
-      <Card className="flex flex-col items-center w-[85%] my-5 md:mt-20">
+      <Card className="flex flex-col items-center w-[85%] md:mt-20">
         <h1 className="mb-4 text-center">Stop Fighting Fires. Start Commanding Them.</h1>
-        <p className="body-1 mb-8 md:mb-16">Whether you’re starting up or it’s all going down. AugmentShell is here.</p>
-        <DialogTrigger content={<ContactForm/>}>
-          <Button variant="link"><h2>Request Early Access</h2></Button>
-        </DialogTrigger>
+        <p className="body-1">Whether you’re starting up or it’s all going down. AugmentShell is here.</p>
       </Card>
+
+      <DialogTrigger content={<ContactForm/>}>
+        <Button className="mb-8" size="lg"><h1>Request Early Access</h1></Button>
+      </DialogTrigger>
 
       {/* <Card className="my-4 md:my-12">
           <Image

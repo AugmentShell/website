@@ -30,11 +30,11 @@ export default function RootLayout({
       <DialogProvider>
         <body
           className={`${fjallaOne.variable} ${cantarell.variable} antialiased w-full
-          bg-[url(/Background_sm_640.svg)] 
-          md:bg-[url(/Background_md_768.svg)] 
-          lg:bg-[url(/Background_lg_1024.svg)] 
+          bg-[url('/Background_sm_640.svg')] 
+          md:bg-[url('/Background_md_768.svg')] 
+          lg:bg-[url('/Background_lg_1024.svg')] 
           bg-no-repeat bg-cover
-          bg-[position:0_-260vh]`}
+          md:bg-[position:0_-260vh]`}
         >
           <main className="flex flex-col items-center gap-10">
             {children}
