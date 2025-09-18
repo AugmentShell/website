@@ -1,103 +1,63 @@
-import Image from "next/image";
+import { Button } from "./_Components/Button";
+import { Card } from "./_Components/Card";
+import { Navbar } from "./_Components/Navbar";
+import TerminalWindow from "./_Components/TerminalWindow";
+import { DialogTrigger } from "./_Components/NextjsEventHandlerCompliance/DialogTrigger";
+import { ContactForm } from "./_Components/DialogContent/ContactForm";
+import { FAQ } from "./_Components/FAQ";
+import { MobileFAQ } from "./_Components/MobileFAQ";
+import { Features } from "./_Components/Features";
+import { MobileFeatures } from "./_Components/MobileFeatures";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+  return (
+    <>
+      <div id="preview"/>
+      <Navbar/>
+
+      <TerminalWindow/>
+
+      <div className="flex flex-col items-center gap-y-5 md:gap-y-10 mt-5 md:mt-20">
+      <Card className="flex flex-col items-center w-[85%]">
+        <h1 className="mb-4">The SRE partner for when your servers are on fire.</h1>
+        <p className="body-2 lg:w-[80%]">AugmentShell is a safety-first, AI-native Execution Agent for your
+          terminal. Turning the chaos of incident response into clear,
+          transparent, and approved plans.</p>
+      </Card>
+      <DialogTrigger content={<ContactForm/>}>
+        <Button><h2>Request Early Access</h2></Button>
+      </DialogTrigger>
+      </div>
+
+      <div id="features"/>
+      <Features/>
+      <MobileFeatures/>
+
+      <div id="faq"/>
+      <FAQ/>
+      <MobileFAQ/>
+
+      <Card className="flex flex-col items-center w-[85%] md:mt-20">
+        <h1 className="mb-4 text-center">Stop Fighting Fires. Start Commanding Them.</h1>
+        <p className="body-1">Whether you’re starting up or it’s all going down. AugmentShell is here.</p>
+      </Card>
+
+      <DialogTrigger content={<ContactForm/>}>
+        <Button className="mb-8" size="lg"><h1>Request Early Access</h1></Button>
+      </DialogTrigger>
+
+      {/* <Card className="my-4 md:my-12">
           <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+            src="/logo-clear-background.svg"
+            alt="Augment Shell"
+            width={0}
+            height={0}
+            sizes="100vw"
+            className="h-auto w-[80vw]"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </Card> */}
+
+    </>
   );
 }
