@@ -27,7 +27,7 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
     return (
       <motion.div
         ref={ref}
-        className={cn("rounded-2xl p-4 px-8 card shadow-sm", className)}
+        className={cn("rounded-2xl p-8 card shadow-sm", className)}
         initial={false}
         transition={transition}
         // only apply whileHover if hoverable is true

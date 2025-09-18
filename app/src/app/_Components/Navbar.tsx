@@ -13,18 +13,18 @@ export const Navbar = () => {
   }
 
   return <>
-    <nav className=" h-16 w-full card flex px-6 xl:px-24 justify-between fixed z-[1000]">
+    <nav className=" w-full card flex px-6 xl:px-24 justify-between fixed z-[1000]">
 
     {/* Logo container */}
 
-    <div className="basis-12/12 flex justify-center lg:basis-5/12">
+    <div className="basis-12/12 flex justify-center mt-3 lg:basis-5/12">
         <Image
           src="/logo-clear-background.svg"
           alt="Augment Shell"
           width={0}
           height={0}
           sizes="100vw"
-          className="h-full w-auto"
+          className="h-[80%] w-auto"
         />
     </div>
 
@@ -41,7 +41,7 @@ export const Navbar = () => {
 
     </div>
 
-  </nav>;
-  <div className=" hidden md:absolute h-16 w-full "></div>
+  </nav>
+  <div className="md:h-8 w-full "></div>
   </>
 };

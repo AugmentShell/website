@@ -16,7 +16,7 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
   return (
     <div className={["flex flex-col items-center w-full", className].join(" ")}>
       {/* === Container with a hard clip mask for the backgrounds === */}
-      <div className="relative h-[40vh] lg:h-[75vh] w-[80%] rounded-2xl">
+      <div className="relative h-[40vh] lg:h-[75vh] w-[80%] rounded-2xl pl-.5 md:pl-2">
         {/* MASK: clips both BG layers perfectly to the same radius */}
         <div className="absolute inset-0 rounded-2xl overflow-hidden">
           {/* BG FAIL */}
@@ -103,7 +103,7 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
           variant={done ? "default" : "warning"}
           onClick={() => { if (!done) setErase(true); }}
         >
-          <h3>ACTIVATE AUGMENTSHELL</h3>
+          <h2>ACTIVATE AUGMENTSHELL</h2>
         </Button>
       </motion.div>
 
@@ -123,10 +123,9 @@ export default function TerminalWindow({ className = "" }: TerminalWindowProps) 
             : "!transition-none"}
           disabled={!typeDone}
           variant={done ? "default" : "warning"}
-          size="xs"
           onClick={() => { if (!done) setErase(true); }}
         >
-          <h3>ACTIVATE AUGMENTSHELL</h3>
+          <h2>ACTIVATE AUGMENTSHELL</h2>
         </Button>
       </motion.div>
     </div>
